@@ -65,7 +65,11 @@ function createQuery(data) {
 app.use(cors({ origin: "*" }));
 app.use(bodyParser.json());
 
-app.all("/", async (req, res) => {
+app.get("/", (req, res) => {
+  res.send("yo");
+});
+
+app.post("/", async (req, res) => {
   const body = req.body;
 
   console.log(body);
