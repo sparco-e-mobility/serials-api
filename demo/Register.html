@@ -1281,6 +1281,7 @@
                         class="reg-form-textfield w-input"
                         maxlength="256"
                         name="fullName"
+                        required=""
                         data-name="Name and Surname"
                         placeholder=""
                         type="text"
@@ -1297,6 +1298,7 @@
                         class="reg-form-textfield w-input"
                         maxlength="256"
                         name="serial"
+                        required=""
                         data-name="Scooter Serial Number"
                         placeholder=""
                         type="text"
@@ -1310,6 +1312,7 @@
                         class="reg-form-textfield w-input"
                         maxlength="256"
                         name="purchaseDate"
+                        required=""
                         data-name="Date of Purchase"
                         placeholder=""
                         type="date"
@@ -1850,72 +1853,46 @@
         document.querySelector(".w-form-fail").style.display = "none";
         const data = new FormData(event.target);
         const value = Object.fromEntries(data.entries());
-
-        console.log({
+        const formData = {
+          serial: value.serial,
+          email: value.email,
+          fullName: value.fullName,
           location: value.land === "other" ? value.landOther : value.land,
-        });
+          purchaseDate: value.purchaseDate,
+        };
+        console.log(formData);
+
         fetch("https://easy-puce-bighorn-sheep-robe.cyclic.app", {
-          body: JSON.stringify({
-            serial: value.serial,
-            email: value.email,
-            fullName: value.fullName,
-            location: value.land === "other" ? value.landOther : value.land,
-            purchaseDate: value.purchaseDate,
-          }),
+          body: JSON.stringify(formData),
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-        }).then((res) => {
-          res
-            .json()
-            .then((res) => {
-              console.log(res);
-              const isSerialValid = res._id;
-              if (isSerialValid) {
-                document.querySelector(".reg-succes").style.display = "block";
-                document.querySelector(".reg-form").style.display = "none";
-                document.querySelector(".reg-form-textfield._2").innerText =
-                  res.serial_production_date;
-              } else {
+        })
+          .then((res) => {
+            res
+              .json()
+              .then((res) => {
+                const isSerialValid = res._id;
+                if (isSerialValid) {
+                  document.querySelector(".reg-succes").style.display = "block";
+                  document.querySelector(".reg-form").style.display = "none";
+                  document.querySelector(".reg-form-textfield._2").innerText =
+                    res.serial_production_date;
+                } else {
+                  document.querySelector(".w-form-fail").style.display =
+                    "block";
+                }
+              })
+              .catch((err) => {
+                console.log(err);
                 document.querySelector(".w-form-fail").style.display = "block";
-              }
-            })
-            .catch((err) => {
-              console.log(err);
-              document.querySelector(".w-form-fail").style.display = "block";
-            });
-        });
-      }
-    </script>
-    <script>
-      const formEl = document.getElementById("form-register");
-      for (let i = 0; i < formEl.elements.length; i++) {
-        const el = formEl.elements[i];
-        if (el.name === "email") {
-          el.value = "dominik.tomcik23@gmail.com";
-          continue;
-        }
-        if (el.name === "fullName") {
-          el.value = "Dominik";
-          continue;
-        }
-        if (el.name === "serial") {
-          el.value = "03KWS1C210158";
-          continue;
-        }
-        if (el.name === "pruchaseDate") {
-          el.value = "2024-03-20";
-          continue;
-        }
-        if (el.id === "Italy") {
-          el.checked = true;
-          continue;
-        }
-        if (el.name === "Policy") {
-          el.checked = true;
-          continue;
-        }
+              });
+          })
+          .catch((err) => {
+            console.log(err);
+            document.querySelector(".w-form-fail").style.display = "block";
+          });
       }
     </script>
     <div>

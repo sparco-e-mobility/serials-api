@@ -86,7 +86,7 @@ app.post("/", async (req, res) => {
   const isSerialValid = preprRes.data.data.Serials.items.length > 0;
   if (isSerialValid) {
     // write user data into prepr
-    const registerUserRes = await axios.post(
+    await axios.post(
       `https://api.eu1.prepr.io/content_items`,
       createQuery(body),
       {
@@ -100,8 +100,7 @@ app.post("/", async (req, res) => {
     return;
   }
 
-  console.log(JSON.stringify(preprRes.data));
-  res.status(400).json({ message: "Invalid serial number" });
+  res.status(401).json({ message: "Invalid serial number" });
 });
 
 app.listen(process.env.PORT || 3000);
