@@ -1860,7 +1860,6 @@
           location: value.land === "other" ? value.landOther : value.land,
           purchaseDate: value.purchaseDate,
         };
-        console.log(formData);
 
         fetch("https://easy-puce-bighorn-sheep-robe.cyclic.app", {
           body: JSON.stringify(formData),
